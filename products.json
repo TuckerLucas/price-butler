@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Alpro iogurte natural",
+        "pid": "7100168",
+        "url": "https://www.continente.pt/laticinios-e-ovos/iogurtes/vegegurtes-e-yofu/",
+        "base_price": 2.99
+    },
+    {
+        "name": "Sensodyne Pro-Esmalte",
+        "pid": "3577259",
+        "url": "https://www.continente.pt/beleza-e-higiene/higiene-oral/pastas-de-dentes/",
+        "base_price": 5.29
+    },
+    {
+        "name": "Tira para Cão Adulto Frango",
+        "pid": "6823737",
+        "url": "https://www.continente.pt/animais/cao/snacks-e-biscoitos/",
+        "base_price": 1.99
+    }
+]
