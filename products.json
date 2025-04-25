@@ -2,19 +2,19 @@
     {
         "name": "Alpro iogurte natural",
         "pid": "7100168",
-        "url": "https://www.continente.pt/laticinios-e-ovos/iogurtes/vegegurtes-e-yofu/",
+        "url": "https://www.continente.pt/produto/yofu-soja-natural-estilo-skyr-alpro-7100168.html?_gl=1*1f5obyv*_up*MQ..*_ga*MTM2NDI4NDYyOC4xNzQ1NTc1MTg4*_ga_56Q9X41Z3T*MTc0NTU4ODQwOS4yLjAuMTc0NTU4ODQwOS4wLjAuMTExODM0MjAzMw..",
         "base_price": 2.99
     },
     {
-        "name": "Sensodyne Pro-Esmalte",
-        "pid": "3577259",
-        "url": "https://www.continente.pt/beleza-e-higiene/higiene-oral/pastas-de-dentes/",
-        "base_price": 5.29
+        "name": "Chá Tetley Gengibre",
+        "pid": "6988301",
+        "url": "https://www.continente.pt/produto/infusao-menta-gengibre-digestao-saquetas-tetley-6988301.html?_gl=1*1juagny*_up*MQ..*_ga*MTM2NDI4NDYyOC4xNzQ1NTc1MTg4*_ga_56Q9X41Z3T*MTc0NTU4ODQwOS4yLjAuMTc0NTU4ODQyMy4wLjAuMTExODM0MjAzMw..",
+        "base_price": 4.09
     },
     {
-        "name": "Tira para Cão Adulto Frango",
-        "pid": "6823737",
-        "url": "https://www.continente.pt/animais/cao/snacks-e-biscoitos/",
-        "base_price": 1.99
+        "name": "Hambúrgueres capitão iglo (18un)",
+        "pid": "7143239",
+        "url": "https://www.continente.pt/produto/hamburgueres-de-vaca-sem-gluten-capitao-iglo-7143239.html?_gl=1*1jb5rdh*_up*MQ..*_ga*MTM2NDI4NDYyOC4xNzQ1NTc1MTg4*_ga_56Q9X41Z3T*MTc0NTU4ODQwOS4yLjAuMTc0NTU4ODQ2MS4wLjAuMTExODM0MjAzMw..",
+        "base_price": 28.39
     }
 ]

@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from email.mime.text import MIMEText
 
-# Get the JSON file path from command-line arguments
+# Check for correct usage
 if len(sys.argv) < 2:
     print("Usage: python3 scraper.py products.json")
     sys.exit(1)
@@ -32,39 +32,43 @@ for product in products_to_track:
     try:
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.text, 'html.parser')
-        product_tiles = soup.find_all('div', class_='col-12 col-sm-3 col-lg-2 productTile')
 
-        pid_found = False
+        # Extract current price
+        price_wrapper = soup.find('div', class_='prices-wrapper')
+        price_tag = price_wrapper.find('span', class_='value') if price_wrapper else None
 
-        for index, tile in enumerate(product_tiles):
-            product_div = tile.find('div', class_='product')
+        if not price_tag or not price_tag.has_attr('content'):
+            results.append(f"{name}: Price not found!")
+            continue
 
-            if product_div and product_div.get('data-pid') == pid:
-                pid_found = True
-                price_tag = tile.find('span', class_='value')
+        current_price = float(price_tag['content'])
 
-                if price_tag:
-                    current_price = float(price_tag['content'])
-                    if current_price < base_price:
-                        discount = float(100 - (current_price*100)/base_price)
-                        results.append(f"{name}: €{current_price:.2f} (was €{base_price:.2f}, {discount:.0f}% off)")
-                    elif current_price > base_price:
-                        increase = float(((current_price*100)/base_price) - 100)
-                        results.append(f"{name}: €{current_price:.2f} (was €{base_price:.2f}, {increase:.0f}% increase)")
-                    else:
-                        break
-        if not pid_found:
-            results.append(f"{name}: NOT FOUND!")
+        # (Optional) Double-check PID
+        page_pid_div = soup.select_one('div.row.no-gutters.product-detail.product-wrapper')
+        page_pid = page_pid_div.get('data-pid') if page_pid_div else None
+
+        if page_pid != pid:
+            results.append(f"• {name}: WARNING - PID mismatch! Expected {pid}, got {page_pid or 'None'}")
+            continue
+
+        # Compare price
+        if current_price < base_price:
+            discount = 100 - (current_price * 100) / base_price
+            results.append(f"• {name}: €{current_price:.2f} (was €{base_price:.2f}, {discount:.0f}% off)")
+        elif current_price > base_price:
+            increase = ((current_price * 100) / base_price) - 100
+            results.append(f"• {name}: €{current_price:.2f} (was €{base_price:.2f}, {increase:.0f}% increase)")
+
     except Exception as e:
-        results.append(f"Error fetching {name} (PID {pid}): {str(e)}")
+        results.append(f"Error fetching {name}: {str(e)}")
         continue
 
 # Compose email
 subject = "Daily Price Report"
 body = "\n".join(results)
 
-load_dotenv()  # Loads from .env by default
-
+# Load credentials from .env
+load_dotenv()
 sender = os.getenv("EMAIL_SENDER")
 password = os.getenv("EMAIL_PASSWORD")
 recipient = os.getenv("EMAIL_RECIPIENT")
@@ -73,10 +77,10 @@ def send_email(subject, body, sender, recipients, password):
     msg = MIMEText(body)
     msg['Subject'] = subject
     msg['From'] = sender
-    msg['To'] = ', '.join(recipients)
+    msg['To'] = ', '.join(recipients if isinstance(recipients, list) else [recipients])
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
-       smtp_server.login(sender, password)
-       smtp_server.sendmail(sender, recipients, msg.as_string())
+        smtp_server.login(sender, password)
+        smtp_server.sendmail(sender, recipients, msg.as_string())
     print("Message sent!")
 
 send_email(subject, body, sender, recipient, password)
