@@ -9,16 +9,33 @@ from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from email.mime.text import MIMEText
 
+load_dotenv()
+
+token = os.getenv("GITHUB_TOKEN")
+username = os.getenv("GITHUB_USERNAME")
+repo = "ContinenteProducts"
+file_path = "products.json"
+branch = "master"
+
+url = f"https://api.github.com/repos/{username}/{repo}/contents/{file_path}"
+
+headers = {
+    "Authorization": f"token {token}",
+    "Accept": "application/vnd.github.v3.raw"
+}
+
+response = requests.get(url, headers=headers)
+
+if response.status_code != 200:
+    print(f"Failed to download file: {response.status_code}")
+    exit(1)
+
+products_to_track = response.json()    
+
 # Check for correct usage
-if len(sys.argv) < 2:
-    print("Usage: python3 scraper.py products.json")
+if len(sys.argv) < 1:
+    print("Usage: python3 ContinenteWebScraper.py")
     sys.exit(1)
-
-json_file = sys.argv[1]
-
-# Load products from JSON
-with open(json_file, 'r') as f:
-    products_to_track = json.load(f)
 
 headers = {'User-Agent': 'Mozilla/5.0'}
 results = []
@@ -68,7 +85,6 @@ subject = "Daily Price Report"
 body = "\n".join(results)
 
 # Load credentials from .env
-load_dotenv()
 sender = os.getenv("EMAIL_SENDER")
 password = os.getenv("EMAIL_PASSWORD")
 recipient = os.getenv("EMAIL_RECIPIENT")
