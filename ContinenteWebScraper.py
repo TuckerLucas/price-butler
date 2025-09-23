@@ -9,33 +9,18 @@ from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from email.mime.text import MIMEText
 
+# Load .env file
 load_dotenv()
 
-token = os.getenv("GITHUB_TOKEN")
-username = os.getenv("GITHUB_USERNAME")
-repo = "ContinenteProducts"
-file_path = "products.json"
-branch = "master"
+# Load products.json
+json_file = "products.json"
 
-url = f"https://api.github.com/repos/{username}/{repo}/contents/{file_path}"
-
-headers = {
-    "Authorization": f"token {token}",
-    "Accept": "application/vnd.github.v3.raw"
-}
-
-response = requests.get(url, headers=headers)
-
-if response.status_code != 200:
-    print(f"Failed to download file: {response.status_code}")
-    exit(1)
-
-products_to_track = response.json()    
-
-# Check for correct usage
-if len(sys.argv) < 1:
-    print("Usage: python3 ContinenteWebScraper.py")
+if not os.path.exists(json_file):
+    print(f"Error: {json_file} not found.")
     sys.exit(1)
+
+with open(json_file, "r") as f:
+    products_to_track = json.load(f)
 
 headers = {'User-Agent': 'Mozilla/5.0'}
 results = []
@@ -60,7 +45,7 @@ for product in products_to_track:
 
         current_price = float(price_tag['content'])
 
-        # (Optional) Double-check PID
+        # Double-check PID
         page_pid_div = soup.select_one('div.row.no-gutters.product-detail.product-wrapper')
         page_pid = page_pid_div.get('data-pid') if page_pid_div else None
 
@@ -90,13 +75,17 @@ password = os.getenv("EMAIL_PASSWORD")
 recipient = os.getenv("EMAIL_RECIPIENT")
 
 def send_email(subject, body, sender, recipients, password):
-    msg = MIMEText(body)
-    msg['Subject'] = subject
-    msg['From'] = sender
-    msg['To'] = ', '.join(recipients if isinstance(recipients, list) else [recipients])
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
-        smtp_server.login(sender, password)
-        smtp_server.sendmail(sender, recipients, msg.as_string())
-    print("Message sent!")
+    try:
+        msg = MIMEText(body)
+        msg['Subject'] = subject
+        msg['From'] = sender
+        msg['To'] = ', '.join(recipients if isinstance(recipients, list) else [recipients])
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+            smtp_server.login(sender, password)
+            smtp_server.sendmail(sender, recipients, msg.as_string())
+        print("✅ Email sent successfully!")
+        
+    except Exception as e:
+        print(f"❌ Failed to send daily report.\n\nError: {str(e)}")
 
 send_email(subject, body, sender, recipient, password)
