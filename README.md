@@ -38,7 +38,6 @@ A Python based supermarket web scraper application for product price tracking on
   Edit this file to contain the products you wish to track. This file contains a few examples with the required parameters:
   * ```name``` -> Enter a descriptive name for your product
   * ```url``` -> Enter the URL link of the specific product listed on the website (there are some examples present in this file already)
-  * ```pid``` -> Enter the corresponding "data-pid" number present in the HTML code of the above [Continente](https://www.continente.pt/) URL
   * ```base_price``` -> Enter the base price ("normal" price) of the product against which price discounts/increases will be compared against
 
 ## Running the application
