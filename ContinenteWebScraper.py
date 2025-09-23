@@ -5,6 +5,7 @@ import smtplib
 import json
 import sys
 import os
+import re
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from email.mime.text import MIMEText
@@ -25,10 +26,14 @@ with open(json_file, "r") as f:
 headers = {'User-Agent': 'Mozilla/5.0'}
 results = []
 
+def extract_pid_from_url(url):
+    match = re.search(r'-(\d+)\.html', url)
+    return match.group(1) if match else None
+
 for product in products_to_track:
     name = product["name"]
-    pid = product["pid"]
     url = product["url"]
+    pid = extract_pid_from_url(url)
     base_price = product["base_price"]
 
     try:
