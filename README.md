@@ -1,4 +1,4 @@
-# Supermarket web scraper
+# Price butler: A supermarket web scraper
 
 A Python based supermarket web scraper application for product price tracking on [Continente](https://www.continente.pt/) with email notification support.
 
